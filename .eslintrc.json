@@ -1,0 +1,135 @@
+// {
+//     "env": {
+//       "es6": true,
+//       "node": true,
+//       "mocha": true
+//     },
+//     "rules": {
+//       "semi": [
+//         "error",
+//         "always"
+//       ],
+//       "indent": [
+//         "warn",
+//         2,
+//         {
+//           "SwitchCase": 1
+//         }
+//       ],
+//       "quotes": [
+//         "error",
+//         "single",
+//         {
+//           "allowTemplateLiterals": true
+//         }
+//       ],
+//       "one-var": [
+//         "error",
+//         "never"
+//       ],
+//       "no-console": [
+//         "warn"
+//       ],
+//       "brace-style": [
+//         "error",
+//         "stroustrup",
+//         {
+//           "allowSingleLine": false
+//         }
+//       ],
+//       "no-debugger": [
+//         "warn"
+//       ],
+//       "require-jsdoc": [
+//         "warn"
+//       ],
+//       "global-require": [
+//         "error"
+//       ],
+//       "linebreak-style": [
+//         "warn",
+//         "unix"
+//       ],
+//       "arrow-body-style": [
+//         "warn",
+//         "always"
+//       ],
+//       "handle-callback-err": [
+//         "error",
+//         "^.*(e|E)rr"
+//       ],
+//       "no-extra-boolean-cast": [
+//         "off"
+//       ],
+//       "no-inner-declarations": [
+//         "off"
+//       ],
+//       "no-irregular-whitespace": [
+//         "off"
+//       ],
+//       "implicit-arrow-linebreak": [
+//         "warn",
+//         "beside"
+//       ],
+//       "no-template-curly-in-string": [
+//         "error"
+//       ]
+//     },
+//     "extends": "eslint:recommended",
+//     "parser": "@babel/eslint-parser",
+//     "parserOptions": {
+//        "ecmaVersion": 2022,
+//        "requireConfigFile": false
+//     }
+//   }
+
+
+
+
+// {
+//   "plugins": [],
+//   "rules": {
+//     "no-unused-vars": "warn",
+//     "no-undef": "warn",
+//     "quotes": ["error", "single"]
+//   },
+//   "env": {
+//     "node": true,
+//     "es6": true
+//   },
+//   "parserOptions": {
+//     "ecmaVersion": 2022
+//   }
+// }
+
+
+
+{
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "extends": ["eslint:recommended"],
+    "parserOptions": {
+      "ecmaVersion": 2022
+    },
+    "rules": {
+      // Common Rules
+      "indent": ["error", 2],
+      "quotes": ["error", "single"],
+      "semi": ["error", "always"],
+      "no-console": ["error", { "allow": ["warn", "error"] }],
+  
+      // Variables
+      "no-unused-vars": ["error", { "vars": "all", "args": "none" }],
+      "no-undef": "error",
+  
+      // Style
+      "linebreak-style": ["error", "unix"],
+      "comma-dangle": ["error", "always-multiline"],
+      "keyword-spacing": ["error", { "before": true, "after": true }],
+      "space-before-blocks": ["error", "always"],
+      "space-before-function-paren": ["error", "always"]
+    }
+  }
+  
