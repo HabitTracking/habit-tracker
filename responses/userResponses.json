@@ -1,0 +1,18 @@
+{
+  "alreadyExist": {
+    "code": 400,
+    "message": "User with this email already exists"
+  },
+  "serverError": {
+    "code": 500,
+    "message": "Internal server error"
+  },
+  "created": {
+    "code": 201,
+    "message": "User created successfully"
+  },
+  "badRequest": {
+    "code": 400,
+    "message": "Bad request"
+  }
+}
