@@ -1,6 +1,10 @@
 {
+  "loginSuccess": {
+    "code": 200,
+    "message": "login successful"
+  },
   "alreadyExist": {
-    "code": 400,
+    "code": 409,
     "message": "User with this email already exists"
   },
   "serverError": {
@@ -14,5 +18,13 @@
   "badRequest": {
     "code": 400,
     "message": "Bad request"
+  },
+  "unauthorized": {
+    "code": 401,
+    "message": "Unauthorized access"
+  },
+  "notFound": {
+    "code": 404,
+    "message": "User not found"
   }
 }
