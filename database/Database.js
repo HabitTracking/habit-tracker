@@ -13,8 +13,8 @@ class Database {
     const dbName = process.env.DB_NAME;
     const uri = 'mongodb://' + host + ':27017/' + dbName;
     // try {
-      await mongoose.connect(uri);
-      console.log('connected to DB');
+    await mongoose.connect(uri);
+    console.log('connected to DB');
     // } catch (err) {
     //   console.log(err);
     // }
@@ -24,13 +24,15 @@ class Database {
     const model = new this.Model(data);
     return await model.save();
   }
-  
   async update (id) {
     return await this.Model.findOneAndUpdate(id);
   }
-  
-  async get (id) {
+  async getById (id) {
     return await this.Model.findById(id);
+  }
+  async getByField (field, value) {
+    const data = await this.Model.findOne({[field]: value});
+    return data ? data._doc : null;
   }
 }
 
