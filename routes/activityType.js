@@ -19,7 +19,7 @@ router.post(
   activityTypeCotroller.add.bind(activityTypeCotroller),
 );
 router.get(
-  '/:id',
+  '/',
   [checkAccess(true)],
   activityTypeCotroller.show.bind(activityTypeCotroller),
 );
