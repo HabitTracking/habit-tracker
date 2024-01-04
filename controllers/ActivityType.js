@@ -21,24 +21,31 @@ class ActivityType {
 
   async show (req, res) {
     const id = req.params.id;
-    if (id) {
-      let activityType = await this.database.getById(id);
-      activityType =  {
-        _id: activityType._id.valueOf(),
-        title: activityType.title,
-      };
-      respond(res, AcTyResponses.successful, activityType);
-      console.log(activityType);
-    } else {
-      let activityTypes = await this.database.getById();
-      activityTypes = activityTypes.map(value=>{
-        return {
-          _id: value._id.valueOf(),
-          title: value.title,
+    try {
+      if (id) {
+        let activityType = await this.database.getById(id);
+        if (!activityType) return respond(res, AcTyResponses.notFound, {_id: id});
+        activityType =  {
+          _id: activityType._id.valueOf(),
+          title: activityType.title,
         };
-      });
-      respond(res, AcTyResponses.successful, activityTypes);
-      console.log(activityTypes);
+        respond(res, AcTyResponses.successful, activityType);
+        console.log(activityType);
+      } else {
+        let activityTypes = await this.database.getById();
+        if (!activityTypes) respond(res, AcTyResponses.notFound, {_id: id});
+        activityTypes = activityTypes.map(value=>{
+          return {
+            _id: value._id.valueOf(),
+            title: value.title,
+          };
+        });
+        respond(res, AcTyResponses.successful, activityTypes);
+        console.log(activityTypes);
+      }
+    } catch (err) {
+      console.log('error in signUp show', err);
+      respond(res, AcTyResponses.serverError);
     }
   }
 }

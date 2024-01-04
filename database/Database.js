@@ -29,6 +29,7 @@ class Database {
   }
   async getById (id) {
     if (id) {
+      if (!mongoose.Types.ObjectId.isValid(id)) return null;
       return await this.Model.findById(id);
     } else {
       return await this.Model.find({});

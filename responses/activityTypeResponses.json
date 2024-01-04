@@ -14,5 +14,9 @@
   "alreadyExist": {
     "code": 409,
     "message": "activityType with this title already exists"
+  },
+  "notFound": {
+    "code": 404,
+    "message": "ActivityType not found"
   }
 }
