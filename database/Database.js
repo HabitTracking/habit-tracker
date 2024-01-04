@@ -28,7 +28,11 @@ class Database {
     return await this.Model.findOneAndUpdate(id);
   }
   async getById (id) {
-    return await this.Model.findById(id);
+    if (id) {
+      return await this.Model.findById(id);
+    } else {
+      return await this.Model.find({});
+    }
   }
   async getByField (field, value) {
     const data = await this.Model.findOne({[field]: value});
