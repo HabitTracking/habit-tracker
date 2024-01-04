@@ -2,6 +2,7 @@ const express = require('express');
 const validateData = require('../middlewares/validateData');
 const checkForRepetitiveUser = require('../middlewares/checkForRepetitiveUser');
 const checkAccess = require('../middlewares/checkAccess');
+const hashProperty = require('../middlewares/hashProperty');
 const UserCotroller = require('../controllers/User');
 const userSchema = require('../schemas/user'); 
 
@@ -10,13 +11,18 @@ const router = express.Router();
 
 router.post(
   '/signup',
-  [checkAccess, validateData(userSchema.signUpSchema), checkForRepetitiveUser],
+  [checkAccess(false), validateData(userSchema.signUpSchema), checkForRepetitiveUser, hashProperty('password')],
   userController.signUp.bind(userController),
 );
-router.get(
+router.post(
   '/login',
-  [checkAccess, validateData(userSchema.loginSchema), checkAccess],
+  [checkAccess(false), validateData(userSchema.loginSchema)],
   userController.login.bind(userController),
+);
+router.post(
+  '/logout',
+  [checkAccess(true)],
+  userController.logout.bind(userController),
 );
 
 module.exports = router;

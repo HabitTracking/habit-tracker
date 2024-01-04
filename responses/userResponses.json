@@ -1,7 +1,11 @@
 {
   "loginSuccess": {
     "code": 200,
-    "message": "login successful"
+    "message": "Login successful"
+  },
+  "logoutSuccess": {
+    "code": 200,
+    "message": "Logout successful"
   },
   "alreadyExist": {
     "code": 409,
