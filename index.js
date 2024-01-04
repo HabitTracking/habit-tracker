@@ -7,7 +7,7 @@ dotenv.config({ path: './.env' });
 const app = express();
 
 app.use(express.json());
-app.use('/user', userRouter);
+app.use('/api/user', userRouter);
 
 async function start () {
   await Database.connect();
