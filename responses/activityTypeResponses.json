@@ -1,0 +1,18 @@
+{
+  "successful": {
+    "code": 200,
+    "message": "successful"
+  },  
+  "created": {
+    "code": 201,
+    "message": "activityType created successfully"
+  },  
+  "serverError": {
+    "code": 500,
+    "message": "Internal server error"
+  },
+  "alreadyExist": {
+    "code": 409,
+    "message": "activityType with this title already exists"
+  }
+}
