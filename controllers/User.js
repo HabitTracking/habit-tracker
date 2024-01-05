@@ -36,8 +36,8 @@ class UserController {
         'Set-Cookie',
         `token=${token}; HttpOnly; path=/; Expires= ${expireTime}`,
       );
-      // res.header('Authorization', `Bearer ${token}`);
-      respond(res, userResponses.loginSuccess); 
+      res.header('Authorization', `Bearer ${token}`);
+      respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
     } else {
       respond(res, userResponses.unauthorized, {credentials});
     }
