@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const UserModel = require('../models/User');
 const responses = require('../responses/userResponses.json');
 const respond = require('../hleper/responder');
 
@@ -13,19 +12,21 @@ module.exports = function checkAccess (hasAccessWithToken) {
       if (token) {
         token = token.split('=')[1];
         try {
-          jwt.verify(token, process.env.jwt_secretKey);
+          const user = jwt.verify(token, process.env.jwt_secretKey);
+          req.info = req.info ? req.info : {};
+          req.info.userId = user.userId;
           next();
           // userId, email
 
           // const isExist = await UserModel.findById(decoded.userId);
           // console.log(1, isExist);
           // if (!isExist) {
-          //   return respond(res, responses.unauthorized, {credentials: req.body});
+          //   return respond(res, responses.unauthorized, {credentials: req.info});
           // }
 
         } catch (err) {
           console.log('error in checkAccess');
-          return respond(res, responses.unauthorized, {credentials: req.body});
+          return respond(res, responses.unauthorized, {credentials: req.info});
         }
       }
       else {
@@ -33,7 +34,7 @@ module.exports = function checkAccess (hasAccessWithToken) {
       }
     }
     if ((!hasAccessWithToken && token) || (hasAccessWithToken && !token)) {
-      return respond(res, responses.unauthorized, {credentials: req.body});
+      return respond(res, responses.unauthorized, {credentials: req.info});
     }
   };
 };

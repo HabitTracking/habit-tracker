@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post(
   '/signup',
-  [checkAccess(false), validateData(userSchema.signUpSchema), checkForRepetitive(UserModel, 'email', userResponses), hashProperty('password')],
+  [checkAccess(false), validateData(userSchema.signUpSchema), checkForRepetitive(UserModel, ['email'], userResponses), hashProperty('password')],
   userController.signUp.bind(userController),
 );
 router.post(

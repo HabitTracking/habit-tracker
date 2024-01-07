@@ -2,12 +2,14 @@ const respond = require('../hleper/responder');
 
 module.exports = function (Model, fieldToCheck, responses) {
   return async (req, res, next) => {
-    // const { email } = req.body;
-
     try {
-      const isExist = await Model.findOne({ [fieldToCheck]: req.body[fieldToCheck] });
+      const condition = {};
+      for (const key of fieldToCheck) {
+        condition[key] = req.info[key];
+      }
+      const isExist = await Model.findOne(condition);
       if (isExist) {
-        return respond(res, responses.alreadyExist, { [fieldToCheck]: req.body[fieldToCheck] });
+        return respond(res, responses.alreadyExist, { [fieldToCheck]: req.info[fieldToCheck] });
       }
       next();
     } catch (error) {
@@ -22,7 +24,7 @@ module.exports = function (Model, fieldToCheck, responses) {
 // const respond = require('../hleper/responder');
 
 // async function checkForRepetitiveUser (req, res, next) {
-//   const { email } = req.body;
+//   const { email } = req.info;
 
 //   try {
 //     const existingUser = await UserModel.findOne({ email });

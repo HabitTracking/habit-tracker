@@ -36,8 +36,8 @@ class Database {
     }
   }
   async getByField (field, value) {
-    const data = await this.Model.findOne({[field]: value});
-    return data ? data._doc : null;
+    const data = await this.Model.find({[field]: value});
+    return data ? data.map(value => value._doc) : null;
   }
 }
 

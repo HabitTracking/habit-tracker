@@ -10,19 +10,20 @@ class ActivityType {
 
   async add (req, res) {
     try {
-      const result = await this.database.create(req.body);
-      const userId = result.toObject()._id.valueOf();
-      respond(res, AcTyResponses.created, {userId});
+      const result = await this.database.create(req.info);
+      const activityTypeId = result.toObject()._id.valueOf();
+      respond(res, AcTyResponses.created, {activityTypeId});
     } catch (err) {
       console.log('error in activityType handler', err);
       respond(res, AcTyResponses.serverError);
     } 
   }
 
-  async show (req, res) {
+  async showAll (req, res) {
+    const userId = req.info.userId;
     try {
-      let activityTypes = await this.database.getById();
-      if (!activityTypes) respond(res, AcTyResponses.notFound);
+      let activityTypes = await this.database.getByField('userId', userId);
+      if (!activityTypes) return respond(res, AcTyResponses.notFound);
       activityTypes = activityTypes.map(value=>{
         return {
           _id: value._id.valueOf(),

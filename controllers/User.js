@@ -15,7 +15,7 @@ class UserController {
 
   async signUp (req, res) {
     try {
-      const result = await this.database.create(req.body);
+      const result = await this.database.create(req.info);
       const userId = result.toObject()._id.valueOf();
       respond(res, userResponses.created, {userId});
     } catch (err) {
@@ -25,8 +25,8 @@ class UserController {
   }
 
   async login (req, res) {
-    const credentials = req.body;
-    const userData = await this.database.getByField('email', credentials.email);
+    const credentials = req.info;
+    const userData = (await this.database.getByField('email', credentials.email))[0];
     if (userData) {
       const isPasswordValid = await bcrypt.compare(credentials.password, userData.password);
       if (!isPasswordValid) return respond(res, userResponses.unauthorized, {credentials});

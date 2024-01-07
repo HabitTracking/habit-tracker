@@ -15,13 +15,13 @@ const router = express.Router();
 
 router.post(
   '/',
-  [checkAccess(true), validateData(activityTypeSchema.add), checkForRepetitive(ActivityTypeModel, 'title', AcTyResponses)],
+  [checkAccess(true), validateData(activityTypeSchema.add), checkForRepetitive(ActivityTypeModel, ['title', 'userId'], AcTyResponses)],
   activityTypeCotroller.add.bind(activityTypeCotroller),
 );
 router.get(
   '/',
   [checkAccess(true)],
-  activityTypeCotroller.show.bind(activityTypeCotroller),
+  activityTypeCotroller.showAll.bind(activityTypeCotroller),
 );
 
 module.exports = router;
