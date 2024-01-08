@@ -22,16 +22,18 @@ class ActivityType {
   async showAll (req, res) {
     const userId = req.info.userId;
     try {
-      let activityTypes = await this.database.getByField('userId', userId);
-      if (!activityTypes) return respond(res, AcTyResponses.notFound);
-      activityTypes = activityTypes.map(value=>{
+      let userActivityTypes = await this.database.getByField('userId', userId);
+      let defaultActivityTypes = await this.database.getByField('userId', null);
+      userActivityTypes.unshift(...defaultActivityTypes);
+      // if (!userActivityTypes) return respond(res, AcTyResponses.notFound);
+      userActivityTypes = userActivityTypes.map(value=>{
         return {
           _id: value._id.valueOf(),
           title: value.title,
         };
       });
-      respond(res, AcTyResponses.successful, activityTypes);
-      console.log(activityTypes);
+      respond(res, AcTyResponses.successful, userActivityTypes);
+      console.log(userActivityTypes);
     } catch (err) {
       console.log('error in signUp show', err);
       respond(res, AcTyResponses.serverError);
