@@ -3,6 +3,10 @@
     "code": 200,
     "message": "successful"
   },  
+  "notFound": {
+    "code": 404,
+    "message": "No activity found"
+  },  
   "created": {
     "code": 201,
     "message": "activity created successfully"

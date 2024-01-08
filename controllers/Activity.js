@@ -46,6 +46,12 @@ class Activity {
 
   }
 
+  async getAll (req, res) {
+    let activities = await this.database.getByField('userId', req.info.userId);
+    if (!activities.length) return respond(res, activityResponses.notFound);
+    return respond(res, activityResponses.successful, activities);
+  }
+
 }
 
 module.exports = Activity;

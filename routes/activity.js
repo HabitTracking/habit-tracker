@@ -14,15 +14,15 @@ router.post(
   [checkAccess(true), validateData(activitySchema.add)],
   activityController.add.bind(activityController),
 );
+router.get(
+  '/',
+  [checkAccess(true)],
+  activityController.getAll.bind(activityController),
+);
 router.post(
   '/addProgress',
   [checkAccess(true), validateData(activitySchema.progress)],
   activityController.addProgress.bind(activityController),
 );
-// router.get(
-//   '/',
-//   [checkAccess(true)],
-//   activityController.show.bind(activityController),
-// );
 
 module.exports = router;
