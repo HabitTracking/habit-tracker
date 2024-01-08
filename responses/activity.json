@@ -1,0 +1,18 @@
+{
+  "successful": {
+    "code": 200,
+    "message": "successful"
+  },  
+  "created": {
+    "code": 201,
+    "message": "activity created successfully"
+  },  
+  "serverError": {
+    "code": 500,
+    "message": "Internal server error"
+  },
+  "targetExceeded": {
+    "code": 400,
+    "message": "Entered progress is more than target"
+  }
+}

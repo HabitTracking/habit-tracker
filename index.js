@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const userRouter = require('./routes/user');
 const activityTypeRouter = require('./routes/activityType');
+const activityRouter = require('./routes/activity');
 // const clientConfig = require('./middlewares/clientConfig');
 const Database = require('./database/Database');
 
@@ -15,6 +16,7 @@ app.use(cors({
 app.use(express.json());
 app.use('/api/user', userRouter);
 app.use('/api/activityType', activityTypeRouter);
+app.use('/api/activity', activityRouter);
 
 async function start () {
   await Database.connect();
