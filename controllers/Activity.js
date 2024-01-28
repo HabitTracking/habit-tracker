@@ -28,7 +28,7 @@ class Activity {
     if (progressTillNow + req.info.amount > activityInfo.targetAmount) {
       return respond(res, activityResponses.targetExceeded);
     }
-    const progress = activity.progress;
+    const progress = activityInfo.progress;
     progress[req.info.date] = progressTillNow + req.info.amount;
     const update = { progress };
     await activity.updateOne(update);
