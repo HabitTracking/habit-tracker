@@ -5,7 +5,7 @@ const ActivitySchema = new mongoose.Schema({
   name: {type: String, required: true},
   note: {type: String},
   color: {type: String},
-  activityType: {type: String, required: true},
+  activityType: {type: mongoose.Schema.Types.ObjectId, required: true},
   startTime: {type: String, required: true},
   frequency: {type: Number, required: true},
   dueDate: {type: String, required: true},
