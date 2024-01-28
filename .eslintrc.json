@@ -125,7 +125,7 @@
       "no-undef": "error",
   
       // Style
-      "linebreak-style": ["error", "unix"],
+      "linebreak-style": ["warn", "unix"],
       "comma-dangle": ["error", "always-multiline"],
       "keyword-spacing": ["error", { "before": true, "after": true }],
       "space-before-blocks": ["error", "always"],
