@@ -24,8 +24,11 @@ class Database {
     const model = new this.Model(data);
     return await model.save();
   }
-  async update (id) {
-    return await this.Model.findOneAndUpdate(id);
+  async updateById (_id, updateObj) {
+    return await this.Model.updateOne({_id}, updateObj);
+  }
+  async updateByField (fieldName, fieldValue, updateObj) {
+    return await this.Model.updateOne({[fieldName]: fieldValue}, updateObj);
   }
   async getById (id) {
     if (id) {
