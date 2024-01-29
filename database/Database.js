@@ -42,6 +42,10 @@ class Database {
     const data = await this.Model.find({[field]: value});
     return data ? data.map(value => value._doc) : null;
   }
+  async conditionalGet (condition) {
+    const data = await this.Model.find(condition);
+    return data ? data.map(value => value._doc) : null;
+  }
 }
 
 module.exports = Database;
