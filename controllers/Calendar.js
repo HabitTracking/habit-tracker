@@ -13,16 +13,26 @@ class ActivityType {
     this.activityDatabase = new Database(ActivityModel);
   }
 
-  // async getMonthActivities (req, res) {
-  //   try {
-  //     const startDate = req.info.date;
-  //     const endDate = moment.unix(startDate).add(1,'M').unix();
+  async getMonthActivities (req, res) {
+    try {
+      const startDate = req.query.date;
+      const endDate = moment.unix(startDate).add(1,'M').unix();
 
-  //     const 
-  //   } catch (err) {
-  //     console.log('error in activityType handler', err);
-  //   } 
-  // }
+      const condition = {date: {$gte: startDate, $lt: endDate}};
+      let days = await this.calendarDatabase.conditionalGet(condition);
+      const report= {};
+      for (const day of days) {
+        let allDays = JSON.parse(JSON.stringify(day.activities));
+        report[day.date] = allDays.length;
+      }
+      // days = days.map(element =>{
+      //   return element.date;
+      // });
+      return respond(res, responses.successful, report);
+    } catch (err) {
+      console.log('error in activityType handler', err);
+    } 
+  }
   async getDayActivities (req, res) {
     try {
       const todayDate = req.query.date;
