@@ -15,38 +15,33 @@ class ActivityType {
 
   async getMonthActivities (req, res) {
     try {
-      const startDate = req.query.date;
+      const startDate = req.info.date;
       const endDate = moment.unix(startDate).add(1,'M').unix();
 
-      const condition = {date: {$gte: startDate, $lt: endDate}};
-      let days = await this.calendarDatabase.conditionalGet(condition);
-      const report= {};
+      let days = await this.calendarDatabase.getInSpan('date', startDate, endDate);
+      const monthActivities= {};
       for (const day of days) {
-        let allDays = JSON.parse(JSON.stringify(day.activities));
-        report[day.date] = allDays.length;
+        let dayActivities = JSON.parse(JSON.stringify(day.activities));
+        monthActivities[day.date] = dayActivities.length;
       }
-      // days = days.map(element =>{
-      //   return element.date;
-      // });
-      return respond(res, responses.successful, report);
+      return respond(res, responses.successful, monthActivities);
     } catch (err) {
-      console.log('error in activityType handler', err);
+      console.log('error in getMonthActivities handler', err);
+      respond(res, responses.serverError);
     } 
   }
   async getDayActivities (req, res) {
     try {
-      const todayDate = req.query.date;
+      const todayDate = req.info.date;
       const tomorrowDate = moment.unix(todayDate).add(1,'d').unix();
       const todayActivities = [];
 
-      const condition = {date: {$gte: todayDate, $lt: tomorrowDate}};
-      let activities = await this.calendarDatabase.conditionalGet(condition);
-      let activityIDs = activities[0].activities;
-      activityIDs = JSON.parse(JSON.stringify(activityIDs));
+      let activities = await this.calendarDatabase.getInSpan('date', todayDate, tomorrowDate);
+      let activitiesID = activities[0].activities;
+      activitiesID = JSON.parse(JSON.stringify(activitiesID));
 
-      for (const activityId of activityIDs) {
+      for (const activityId of activitiesID) {
         let activity = await this.activityDatabase.getById(activityId);
-        activity = activity._doc;
         let progress;
         for (const [date] of Object.entries(activity.progress)) {
           if (date>=todayDate && date<tomorrowDate) {
@@ -61,7 +56,8 @@ class ActivityType {
       }
       return respond(res, responses.successful, todayActivities);
     } catch (err) {
-      console.log('error in activityType handler', err);
+      console.log('error in getDayActivities handler', err);
+      respond(res, responses.serverError);
     } 
   }
 

@@ -33,13 +33,18 @@ class Database {
   async getById (id) {
     if (id) {
       if (!mongoose.Types.ObjectId.isValid(id)) return null;
-      return await this.Model.findById(id);
+      return (await this.Model.findById(id))._doc;
     } else {
-      return await this.Model.find({});
+      return (await this.Model.find({}))._doc;
     }
   }
   async getByField (field, value) {
     const data = await this.Model.find({[field]: value});
+    return data ? data.map(value => value._doc) : null;
+  }
+  async getInSpan (field, gte, lt) {
+    const condition = {[field]: {$gte: gte, $lt: lt}};
+    const data = await this.Model.find(condition);
     return data ? data.map(value => value._doc) : null;
   }
   async conditionalGet (condition) {
