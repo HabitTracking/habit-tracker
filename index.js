@@ -1,14 +1,25 @@
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
+const logger = require('./startup/logger');
+require('express-async-errors');
+const errorHandler = require('./middlewares/errorHandler');
 const userRouter = require('./routes/user');
 const activityTypeRouter = require('./routes/activityType');
 const activityRouter = require('./routes/activity');
 const calendarRouter = require('./routes/calendar');
-// const clientConfig = require('./middlewares/clientConfig');
 const Database = require('./database/Database');
-
+const dotenv = require('dotenv');
 dotenv.config({ path: './.env' });
+
+process.on('uncaughtException', (err)=>{
+  logger.error('uncaughtException', err);
+  process.exit();
+});
+process.on('unhandledRejection', (err)=>{
+  logger.error('unhandledRejection', err);
+  process.exit();
+});
+
 const app = express();
 app.use(cors({
   credentials: true,
@@ -19,13 +30,14 @@ app.use('/api/user', userRouter);
 app.use('/api/activityType', activityTypeRouter);
 app.use('/api/activity', activityRouter);
 app.use('/api/calendar', calendarRouter);
+app.use(errorHandler);
 
 async function start () {
   await Database.connect();
 
   const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {
-    console.log(`server is listening on port ${PORT}`);
+    logger.info(`server is listening on port ${PORT}`);
   });
 }
 

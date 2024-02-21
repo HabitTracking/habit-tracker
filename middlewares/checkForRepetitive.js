@@ -2,20 +2,20 @@ const respond = require('../hleper/responder');
 
 module.exports = function (Model, fieldToCheck, responses) {
   return async (req, res, next) => {
-    try {
-      const condition = {};
-      for (const key of fieldToCheck) {
-        condition[key] = req.info[key];
-      }
-      const isExist = await Model.findOne(condition);
-      if (isExist) {
-        return respond(res, responses.alreadyExist, { [fieldToCheck]: req.info[fieldToCheck] });
-      }
-      next();
-    } catch (error) {
-      console.error('Error checking for repetitive:', error);
-      respond(res, responses.serverError);
+    // try {
+    const condition = {};
+    for (const key of fieldToCheck) {
+      condition[key] = req.info[key];
     }
+    const isExist = await Model.findOne(condition);
+    if (isExist) {
+      return respond(res, responses.alreadyExist, { [fieldToCheck]: req.info[fieldToCheck] });
+    }
+    next();
+    // } catch (error) {
+    //   console.error('Error checking for repetitive:', error);
+    //   respond(res, responses.serverError);
+    // }
   };
 };
 

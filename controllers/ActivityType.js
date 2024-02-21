@@ -2,7 +2,6 @@ const Database = require('../database/Database');
 const ActivityTypeModel = require('../models/ActivityType');
 const respond = require('../hleper/responder');
 const AcTyResponses = require('../responses/activityTypeResponses.json');
-const logger = require('../startup/logger');
 
 class ActivityType {
   constructor () {
@@ -10,34 +9,34 @@ class ActivityType {
   }
 
   async add (req, res) {
-    try {
-      const result = await this.database.create(req.info);
-      const activityTypeId = result.toObject()._id.valueOf();
-      respond(res, AcTyResponses.created, {activityTypeId});
-    } catch (err) {
-      logger.error('error in activityType handler', err);
-      respond(res, AcTyResponses.serverError);
-    } 
+    // try {
+    const result = await this.database.create(req.info);
+    const activityTypeId = result.toObject()._id.valueOf();
+    respond(res, AcTyResponses.created, {activityTypeId});
+    // } catch (err) {
+    //   logger.error('error in activityType handler', err);
+    //   respond(res, AcTyResponses.serverError);
+    // } 
   }
 
   async showAll (req, res) {
     const userId = req.info.userId;
-    try {
-      let userActivityTypes = await this.database.getByField('userId', userId);
-      let defaultActivityTypes = await this.database.getByField('userId', null);
-      userActivityTypes.unshift(...defaultActivityTypes);
-      // if (!userActivityTypes) return respond(res, AcTyResponses.notFound);
-      userActivityTypes = userActivityTypes.map(value=>{
-        return {
-          _id: value._id.valueOf(),
-          title: value.title,
-        };
-      });
-      respond(res, AcTyResponses.successful, userActivityTypes);
-    } catch (err) {
-      logger.error('error in signUp show', err);
-      respond(res, AcTyResponses.serverError);
-    }
+    // try {
+    let userActivityTypes = await this.database.getByField('userId', userId);
+    let defaultActivityTypes = await this.database.getByField('userId', null);
+    userActivityTypes.unshift(...defaultActivityTypes);
+    // if (!userActivityTypes) return respond(res, AcTyResponses.notFound);
+    userActivityTypes = userActivityTypes.map(value=>{
+      return {
+        _id: value._id.valueOf(),
+        title: value.title,
+      };
+    });
+    respond(res, AcTyResponses.successful, userActivityTypes);
+    // } catch (err) {
+    //   logger.error('error in signUp show', err);
+    //   respond(res, AcTyResponses.serverError);
+    // }
   }
 }
 

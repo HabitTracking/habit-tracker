@@ -13,13 +13,13 @@ class Database {
     const host = process.env.DB_HOST;
     const dbName = process.env.DB_NAME;
     const uri = 'mongodb://' + host + ':27017/' + dbName;
-    try {
-      await mongoose.connect(uri);
-      logger.info('connected to DB');
-    } catch (err) {
-      logger.error('can not connect to DB', err);
-      process.exit();
-    }
+    // try {
+    await mongoose.connect(uri);
+    logger.info('connected to DB');
+    // } catch (err) {
+    //   logger.error('can not connect to DB', err);
+    //   process.exit();
+    // }
   }
   
   async create (data) {
