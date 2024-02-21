@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const get = Joi.object({
-  date: Joi.string().min(3).max(255).required(),
+  date: Joi.string().required(),
 });
 
 module.exports = {

@@ -3,20 +3,24 @@
     "code": 200,
     "message": "successful"
   },  
-  "notFound": {
-    "code": 404,
-    "message": "No activity found"
-  },  
   "created": {
     "code": 201,
     "message": "activity created successfully"
   },  
-  "serverError": {
-    "code": 500,
-    "message": "Internal server error"
-  },
   "targetExceeded": {
     "code": 400,
     "message": "Entered progress is more than target"
+  },
+  "forbidden": {
+    "code": 403,
+    "message": "Do not have access to this activity"
+  },
+  "notFound": {
+    "code": 404,
+    "message": "No activity found"
+  },
+  "serverError": {
+    "code": 500,
+    "message": "Internal server error"
   }
 }

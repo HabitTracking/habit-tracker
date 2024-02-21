@@ -6,15 +6,15 @@ const add = Joi.object({
   color: Joi.string().length(6).default('ffffff'),
   activityType: Joi.string().required(), //id
   startTime: Joi.string().required(), //timestamp
-  frequency: Joi.number().required(), //0 1 3 7 30
+  frequency: Joi.number().min(0).required(), //0 1 3 7 30
   dueDate: Joi.string().required(), //timestamp
   targetUnit: Joi.string().required(), //کیلومتر
-  targetAmount: Joi.number().required(), // 10
+  targetAmount: Joi.number().min(0).required(), // 10
 });
 const progress = Joi.object({
   activityId: Joi.string().required(),
   date: Joi.string().required(),
-  amount: Joi.number().required(),
+  amount: Joi.number().min(0).required(),
 });
 
 module.exports = {
