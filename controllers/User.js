@@ -26,21 +26,26 @@ class UserController {
 
   async login (req, res) {
     const credentials = req.info;
-    const userData = (await this.database.getByField('email', credentials.email))[0];
-    if (userData) {
-      const isPasswordValid = await bcrypt.compare(credentials.password, userData.password);
-      if (!isPasswordValid) return respond(res, userResponses.unauthorized, {credentials});
-      const token = jwt.sign({ userId: userData._id, email: userData.email }, process.env.jwt_secretKey, { expiresIn: '1h' });
-      // const expireTime = new Date(new Date().getTime() + 60 * 60 * 1000).toUTCString();
-      // res.setHeader(
-      //   'Set-Cookie',
-      //   `token=${token}; HttpOnly; path=/; Expires= ${expireTime}`,
-      // );
-      // res.header('Authorization', `Bearer ${token}`);
-      res.cookie('token', token, { maxAge: 60 * 60 * 1000 });
-      respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
-    } else {
-      respond(res, userResponses.unauthorized, {credentials});
+    try {
+      const userData = (await this.database.getByField('email', credentials.email))[0];
+      if (userData) {
+        const isPasswordValid = await bcrypt.compare(credentials.password, userData.password);
+        if (!isPasswordValid) return respond(res, userResponses.unauthorized, {credentials});
+        const token = jwt.sign({ userId: userData._id, email: userData.email }, process.env.jwt_secretKey, { expiresIn: '1h' });
+        // const expireTime = new Date(new Date().getTime() + 60 * 60 * 1000).toUTCString();
+        // res.setHeader(
+        //   'Set-Cookie',
+        //   `token=${token}; HttpOnly; path=/; Expires= ${expireTime}`,
+        // );
+        // res.header('Authorization', `Bearer ${token}`);
+        res.cookie('token', token, { maxAge: 60 * 60 * 1000 });
+        respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
+      } else {
+        respond(res, userResponses.unauthorized, {credentials});
+      }
+    } catch (err) {
+      console.log('error in login handler', err);
+      respond(res, userResponses.serverError);
     }
   }
 
@@ -52,7 +57,6 @@ class UserController {
     res.clearCookie('token');
     respond(res, userResponses.logoutSuccess);
   }
-
 }
 
 module.exports = UserController;
