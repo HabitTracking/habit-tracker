@@ -24,8 +24,7 @@ class Activity {
           thisDay = {date: date, activities: [activityId]};
           await this.calendarDatabase.create(thisDay);
         } else {
-          // const dayInfo = thisDay._doc;
-          let  activities = thisDay[0].activities;
+          let activities = thisDay[0].activities;
           activities = JSON.parse(JSON.stringify(activities));
           activities.push(activityId);
 
@@ -35,36 +34,32 @@ class Activity {
       }
       return respond(res, activityResponses.created, {activityId});
     } catch (err) {
-      console.log('error in activity handler', err);
+      console.log('error in activity add handler', err);
       respond(res, activityResponses.serverError);
     } 
   }
 
   async addProgress (req, res) {
-    const activity = await this.activityDatabase.getById(req.info.activityId);
-    const activityInfo = activity._doc;
-    let progressTillNow = activityInfo.progress[req.info.date];
-    if (!progressTillNow) progressTillNow = 0;
-    if (progressTillNow + req.info.amount > activityInfo.targetAmount) {
-      return respond(res, activityResponses.targetExceeded);
+    try {
+      const activity = await this.activityDatabase.getById(req.info.activityId);
+      if (activity.userId.valueOf() !== req.info.userId) {
+        return respond(res, activityResponses.forbidden);
+      }
+      let progressTillNow = activity.progress[req.info.date];
+      if (!progressTillNow) progressTillNow = 0;
+      if (progressTillNow + req.info.amount > activity.targetAmount) {
+        return respond(res, activityResponses.targetExceeded);
+      }
+      const progress = activity.progress;
+      progress[req.info.date] = progressTillNow + req.info.amount;
+      const update = { progress };
+      await this.activityDatabase.updateById(req.info.activityId, update);
+      return respond(res, activityResponses.successful);
+
+    } catch (err) {
+      console.log('error in activity addProgress handler', err);
+      respond(res, activityResponses.serverError);
     }
-    const progress = activityInfo.progress;
-    progress[req.info.date] = progressTillNow + req.info.amount;
-    const update = { progress };
-    await this.activityDatabase.updateById(req.info.activityId, update);
-    return respond(res, activityResponses.successful);
-
-    // const activity = await this.database.getById(req.info.activityId);
-    // const activityInfo = activity._doc;
-    // let progressTillNow = activityInfo.progress[req.info.date];
-    // if (!progressTillNow) progressTillNow = 0;
-    // if (progressTillNow + req.info.amount > activityInfo.targetAmount) {
-    //   return respond(res, activityResponses.targetExceeded);
-    // }
-    // activityInfo.progress[req.info.date] = progressTillNow + req.info.amount;
-    // let a = await activity.save();
-    // console.log(a);
-
   }
 
   async getAll (req, res) {
