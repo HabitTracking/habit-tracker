@@ -4,6 +4,7 @@ const ActivityModel = require('../models/Activity');
 const respond = require('../hleper/responder');
 const responses = require('../responses/activity.json');
 const moment = require('jalali-moment');
+const logger = require('../startup/logger');
 moment().locale('fa');
 
 
@@ -26,7 +27,7 @@ class ActivityType {
       }
       return respond(res, responses.successful, monthActivities);
     } catch (err) {
-      console.log('error in getMonthActivities handler', err);
+      logger.error('error in getMonthActivities handler', err);
       respond(res, responses.serverError);
     } 
   }
@@ -56,7 +57,7 @@ class ActivityType {
       }
       return respond(res, responses.successful, todayActivities);
     } catch (err) {
-      console.log('error in getDayActivities handler', err);
+      logger.error('error in getDayActivities handler', err);
       respond(res, responses.serverError);
     } 
   }

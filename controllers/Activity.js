@@ -4,6 +4,7 @@ const CalendarModel = require('../models/Calendar');
 const calculateActivityDays = require('../hleper/calculateActivityDays');
 const respond = require('../hleper/responder');
 const activityResponses = require('../responses/activity.json');
+const logger = require('../startup/logger');
 
 class Activity {
   constructor () {
@@ -34,7 +35,7 @@ class Activity {
       }
       return respond(res, activityResponses.created, {activityId});
     } catch (err) {
-      console.log('error in activity add handler', err);
+      logger.error('error in activity add handler', err);
       respond(res, activityResponses.serverError);
     } 
   }
@@ -57,7 +58,7 @@ class Activity {
       return respond(res, activityResponses.successful);
 
     } catch (err) {
-      console.log('error in activity addProgress handler', err);
+      logger.error('error in activity addProgress handler', err);
       respond(res, activityResponses.serverError);
     }
   }

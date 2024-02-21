@@ -16,16 +16,7 @@ module.exports = function checkAccess (hasAccessWithToken) {
           req.info = req.info ? req.info : {};
           req.info.userId = user.userId;
           next();
-          // userId, email
-
-          // const isExist = await UserModel.findById(decoded.userId);
-          // console.log(1, isExist);
-          // if (!isExist) {
-          //   return respond(res, responses.unauthorized, {credentials: req.info});
-          // }
-
         } catch (err) {
-          console.log('error in checkAccess');
           return respond(res, responses.unauthorized, {credentials: req.info});
         }
       }

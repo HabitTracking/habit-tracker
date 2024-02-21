@@ -6,6 +6,7 @@ const userResponses = require('../responses/userResponses.json');
 const UserModel = require('../models/User');
 
 const dotenv = require('dotenv');
+const logger = require('../startup/logger');
 dotenv.config({ path: './.env' });
 
 class UserController {
@@ -19,7 +20,7 @@ class UserController {
       const userId = result.toObject()._id.valueOf();
       respond(res, userResponses.created, {userId});
     } catch (err) {
-      console.log('error in signUp handler', err);
+      logger.error('error in signUp handler', err);
       respond(res, userResponses.serverError);
     }
   }
@@ -44,7 +45,7 @@ class UserController {
         respond(res, userResponses.unauthorized, {credentials});
       }
     } catch (err) {
-      console.log('error in login handler', err);
+      logger.error('error in login handler', err);
       respond(res, userResponses.serverError);
     }
   }

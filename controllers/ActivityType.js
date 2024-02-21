@@ -2,6 +2,7 @@ const Database = require('../database/Database');
 const ActivityTypeModel = require('../models/ActivityType');
 const respond = require('../hleper/responder');
 const AcTyResponses = require('../responses/activityTypeResponses.json');
+const logger = require('../startup/logger');
 
 class ActivityType {
   constructor () {
@@ -14,7 +15,7 @@ class ActivityType {
       const activityTypeId = result.toObject()._id.valueOf();
       respond(res, AcTyResponses.created, {activityTypeId});
     } catch (err) {
-      console.log('error in activityType handler', err);
+      logger.error('error in activityType handler', err);
       respond(res, AcTyResponses.serverError);
     } 
   }
@@ -33,9 +34,8 @@ class ActivityType {
         };
       });
       respond(res, AcTyResponses.successful, userActivityTypes);
-      console.log(userActivityTypes);
     } catch (err) {
-      console.log('error in signUp show', err);
+      logger.error('error in signUp show', err);
       respond(res, AcTyResponses.serverError);
     }
   }
