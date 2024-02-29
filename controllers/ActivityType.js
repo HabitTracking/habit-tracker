@@ -1,7 +1,7 @@
 const Database = require('../database/Database');
 const ActivityTypeModel = require('../models/ActivityType');
 const respond = require('../hleper/responder');
-const AcTyResponses = require('../responses/activityTypeResponses.json');
+const AcTyResponses = require('../responses/activityType.json');
 
 class ActivityType {
   constructor () {

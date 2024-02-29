@@ -13,7 +13,11 @@
   },
   "alreadyExist": {
     "code": 409,
-    "message": "activityType with this title already exists"
+    "message": "ActivityType with this title already exists"
+  },
+  "forbidden": {
+    "code": 403,
+    "message": "Do not have access to this activityType"
   },
   "notFound": {
     "code": 404,
