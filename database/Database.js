@@ -33,12 +33,15 @@ class Database {
     return await this.Model.updateOne({[fieldName]: fieldValue}, updateObj);
   }
   async getById (id) {
+    let document;
     if (id) {
       if (!mongoose.Types.ObjectId.isValid(id)) return null;
-      return (await this.Model.findById(id))._doc;
+      document = await this.Model.findById(id);
     } else {
-      return (await this.Model.find({}))._doc;
+      document = await this.Model.find({});
     }
+    if (!document) return null;
+    return document._doc;
   }
   async getByField (field, value) {
     const data = await this.Model.find({[field]: value});
