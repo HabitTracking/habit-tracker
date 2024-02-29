@@ -1,17 +1,25 @@
 const Database = require('../database/Database');
 const ActivityModel = require('../models/Activity');
+const ActivityTypeModel = require('../models/ActivityType');
 const CalendarModel = require('../models/Calendar');
 const calculateActivityDays = require('../hleper/calculateActivityDays');
 const respond = require('../hleper/responder');
 const activityResponses = require('../responses/activity.json');
+const activityTypeResponses = require('../responses/activityType.json');
 
 class Activity {
   constructor () {
     this.activityDatabase = new Database(ActivityModel);
+    this.activityTypeDatabase = new Database(ActivityTypeModel);
     this.calendarDatabase = new Database(CalendarModel);
   }
 
   async add (req, res) {
+    const activityType = await this.activityTypeDatabase.getById(req.info.activityType);
+    if (activityType.userId != req.info.userId) {
+      return respond(res, activityTypeResponses.forbidden);
+    }
+
     req.info.progress = {[req.info.startTime]: 0};
     // try {
     const result = await this.activityDatabase.create(req.info);
