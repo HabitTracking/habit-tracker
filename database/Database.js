@@ -47,8 +47,12 @@ class Database {
     const data = await this.Model.find({[field]: value});
     return data ? data.map(value => value._doc) : null;
   }
-  async getInSpan (field, gte, lt) {
-    const condition = {[field]: {$gte: gte, $lt: lt}};
+  async getByTwoField (field1, value1, field2, value2) {
+    const data = await this.Model.find({[field1]: value1, [field2]: value2});
+    return data ? data.map(value => value._doc) : null;
+  }
+  async getInSpan (checkField, value, rangeField, gte, lt) {
+    const condition = {[checkField]: value, [rangeField]: {$gte: gte, $lt: lt}};
     const data = await this.Model.find(condition);
     return data ? data.map(value => value._doc) : null;
   }

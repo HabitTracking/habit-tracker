@@ -16,7 +16,7 @@ class Activity {
 
   async add (req, res) {
     const activityType = await this.activityTypeDatabase.getById(req.info.activityType);
-    if (activityType.userId != req.info.userId) {
+    if (activityType.userId && activityType.userId != req.info.userId) {
       return respond(res, activityTypeResponses.forbidden);
     }
 
@@ -27,15 +27,14 @@ class Activity {
       
     const dates = calculateActivityDays(req.info.startTime, req.info.frequency, req.info.dueDate);
     for (const date of dates) {
-      let thisDay = await this.calendarDatabase.getByField('date', date);
+      let thisDay = await this.calendarDatabase.getByTwoField('userId', req.info.userId, 'date', date);
       if (!thisDay.length) {
-        thisDay = {date: date, activities: [activityId]};
+        thisDay = {userId: req.info.userId, date: date, activities: [activityId]};
         await this.calendarDatabase.create(thisDay);
       } else {
         let activities = thisDay[0].activities;
         activities = JSON.parse(JSON.stringify(activities));
         activities.push(activityId);
-
         const update = { activities};
         await this.calendarDatabase.updateByField('date', date, update);
       }  

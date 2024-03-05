@@ -18,7 +18,7 @@ class ActivityType {
     const startDate = req.info.date;
     const endDate = moment.unix(startDate).add(1,'M').unix();
 
-    let days = await this.calendarDatabase.getInSpan('date', startDate, endDate);
+    let days = await this.calendarDatabase.getInSpan('userId', req.info.userId, 'date', startDate, endDate);
     const monthActivities= {};
     for (const day of days) {
       let dayActivities = JSON.parse(JSON.stringify(day.activities));
@@ -36,7 +36,8 @@ class ActivityType {
     const tomorrowDate = moment.unix(todayDate).add(1,'d').unix();
     const todayActivities = [];
 
-    let activities = await this.calendarDatabase.getInSpan('date', todayDate, tomorrowDate);
+    let activities = await this.calendarDatabase.getInSpan('userId', req.info.userId, 'date', todayDate, tomorrowDate);
+    if (activities.length === 0) return respond(res, responses.notFound);
     let activitiesID = activities[0].activities;
     activitiesID = JSON.parse(JSON.stringify(activitiesID));
 
