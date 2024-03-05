@@ -19,6 +19,7 @@ class ActivityType {
     const endDate = moment.unix(startDate).add(1,'M').unix();
 
     let days = await this.calendarDatabase.getInSpan('userId', req.info.userId, 'date', startDate, endDate);
+    if (days.length === 0) return respond(res, responses.notFound);
     const monthActivities= {};
     for (const day of days) {
       let dayActivities = JSON.parse(JSON.stringify(day.activities));
