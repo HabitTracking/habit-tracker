@@ -45,20 +45,20 @@ class Database {
   }
   async getByField (field, value) {
     const data = await this.Model.find({[field]: value});
-    return data ? data.map(value => value._doc) : null;
+    return data.map(value => value._doc);
   }
   async getByTwoField (field1, value1, field2, value2) {
     const data = await this.Model.find({[field1]: value1, [field2]: value2});
-    return data ? data.map(value => value._doc) : null;
+    return data.map(value => value._doc);
   }
   async getInSpan (checkField, value, rangeField, gte, lt) {
     const condition = {[checkField]: value, [rangeField]: {$gte: gte, $lt: lt}};
     const data = await this.Model.find(condition);
-    return data ? data.map(value => value._doc) : null;
+    return data.map(value => value._doc);
   }
   async conditionalGet (condition) {
     const data = await this.Model.find(condition);
-    return data ? data.map(value => value._doc) : null;
+    return data.map(value => value._doc);
   }
 }
 
