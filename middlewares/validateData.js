@@ -10,13 +10,9 @@ module.exports = function validate (schema, fieldToValidate = 'body') {
       respond(res, userResponses.badRequest, {errors});
     }
     else {
-      // req.info = req.info ? req.info : {};
-      req.info = req.info ?? {};
-      for (const [key, value] of Object.entries(info)) {
-        req.info[key] = value;
-      }
+      req.info ??= {};
+      req.info = {...req.info, ...info};
       next();
-      // req.info = info;
     }
   };
 };
