@@ -16,6 +16,7 @@ class Activity {
 
   async add (req, res) {
     const activityType = await this.activityTypeDatabase.getById(req.info.activityType);
+    if (!activityType) return respond(res, activityTypeResponses.notFound);
     if (activityType.userId && activityType.userId != req.info.userId) {
       return respond(res, activityTypeResponses.forbidden);
     }
