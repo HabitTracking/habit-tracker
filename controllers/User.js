@@ -18,7 +18,7 @@ class UserController {
     // try {
     const result = await this.database.create(req.info);
     const userId = result.toObject()._id.valueOf();
-    respond(res, userResponses.created, {userId});
+    return respond(res, userResponses.created, {userId});
     // } catch (err) {
     //   logger.error('error in signUp handler', err);
     //   respond(res, userResponses.serverError);
@@ -27,9 +27,8 @@ class UserController {
 
   async login (req, res) {
     const credentials = req.info;
-    // try {
     const userData = (await this.database.getByField('email', credentials.email))[0];
-    if (!userData) respond(res, userResponses.unauthorized, {credentials});
+    if (!userData) return respond(res, userResponses.unauthorized, {credentials});
     const isPasswordValid = await bcrypt.compare(credentials.password, userData.password);
     if (!isPasswordValid) return respond(res, userResponses.unauthorized, {credentials});
     const token = jwt.sign({ userId: userData._id, email: userData.email }, process.env.jwt_secretKey, { expiresIn: '1h' });
@@ -40,7 +39,7 @@ class UserController {
     // );
     // res.header('Authorization', `Bearer ${token}`);
     res.cookie(process.env.TOKEN_NAME, token, { maxAge: 60 * 60 * 1000 });
-    respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
+    return respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
   }
 
   async logout (req, res) {
@@ -49,7 +48,7 @@ class UserController {
     //   'token=deleted; HttpOnly; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
     // );
     res.clearCookie(process.env.TOKEN_NAME);
-    respond(res, userResponses.logoutSuccess);
+    return respond(res, userResponses.logoutSuccess);
   }
 }
 

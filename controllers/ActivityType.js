@@ -12,7 +12,7 @@ class ActivityType {
     // try {
     const result = await this.database.create(req.info);
     const activityTypeId = result.toObject()._id.valueOf();
-    respond(res, AcTyResponses.created, {activityTypeId});
+    return respond(res, AcTyResponses.created, {activityTypeId});
     // } catch (err) {
     //   logger.error('error in activityType handler', err);
     //   respond(res, AcTyResponses.serverError);
