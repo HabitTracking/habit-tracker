@@ -39,7 +39,7 @@ class UserController {
     //   `token=${token}; HttpOnly; path=/; Expires= ${expireTime}`,
     // );
     // res.header('Authorization', `Bearer ${token}`);
-    res.cookie('token', token, { maxAge: 60 * 60 * 1000 });
+    res.cookie(process.env.TOKEN_NAME, token, { maxAge: 60 * 60 * 1000 });
     respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
   }
 
@@ -48,7 +48,7 @@ class UserController {
     //   'Set-Cookie',
     //   'token=deleted; HttpOnly; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT',
     // );
-    res.clearCookie('token');
+    res.clearCookie(process.env.TOKEN_NAME);
     respond(res, userResponses.logoutSuccess);
   }
 }
