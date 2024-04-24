@@ -10,17 +10,30 @@ class Database {
   }
  
   static async connect () {
-    const host = process.env.DB_HOST;
-    const dbName = process.env.DB_NAME;
-    const uri = 'mongodb://' + host + ':27017/' + dbName;
-    // try {
-    await mongoose.connect(uri);
-    logger.info('connected to DB');
-    // } catch (err) {
-    //   logger.error('can not connect to DB', err);
-    //   process.exit();
-    // }
+    // uri is like : mongodb+srv://username:password@habit-tracker.mov8m3b.mongodb.net/?retryWrites=true&w=majority&appName=habit-tracker
+    const uri = process.env.DB_URI;
+    const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+    try {
+      await mongoose.connect(uri, clientOptions);
+      await mongoose.connection.db.admin().command({ ping: 1 });
+      logger.info('connected to DB');
+    } catch (err) {
+      logger.error('can not connect to DB', err);
+      process.exit();
+    }
   }
+  // static async connect () {
+  //   const host = process.env.DB_HOST;
+  //   const dbName = process.env.DB_NAME;
+  //   const uri = 'mongodb://' + host + ':27017/' + dbName;
+  //   // try {
+  //   await mongoose.connect(uri);
+  //   logger.info('connected to DB');
+  //   // } catch (err) {
+  //   //   logger.error('can not connect to DB', err);
+  //   //   process.exit();
+  //   // }
+  // }
   
   async create (data) {
     const model = new this.Model(data);
