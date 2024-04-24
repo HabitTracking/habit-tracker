@@ -29,8 +29,8 @@ class Database {
   async updateById (_id, updateObj) {
     return await this.Model.updateOne({_id}, updateObj);
   }
-  async updateByField (fieldName, fieldValue, updateObj) {
-    return await this.Model.updateOne({[fieldName]: fieldValue}, updateObj);
+  async updateByTwoField (field1, value1, field2, value2, updateObj) {
+    return await this.Model.updateOne({[field1]: value1, [field2]: value2}, updateObj);
   }
   async getById (id) {
     let document;

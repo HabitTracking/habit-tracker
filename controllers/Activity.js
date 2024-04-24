@@ -6,6 +6,7 @@ const calculateActivityDays = require('../hleper/calculateActivityDays');
 const respond = require('../hleper/responder');
 const activityResponses = require('../responses/activity.json');
 const activityTypeResponses = require('../responses/activityType.json');
+const { log } = require('winston');
 
 class Activity {
   constructor () {
@@ -17,9 +18,7 @@ class Activity {
   async add (req, res) {
     const activityType = await this.activityTypeDatabase.getById(req.info.activityType);
     if (!activityType) return respond(res, activityTypeResponses.notFound);
-    if (activityType.userId && activityType.userId != req.info.userId) {
-      return respond(res, activityTypeResponses.forbidden);
-    }
+    if (activityType.userId && activityType.userId != req.info.userId) return respond(res, activityTypeResponses.forbidden);
 
     req.info.progress = {[req.info.startTime]: 0};
     // try {
@@ -37,7 +36,7 @@ class Activity {
         activities = JSON.parse(JSON.stringify(activities));
         activities.push(activityId);
         const update = { activities};
-        await this.calendarDatabase.updateByField('date', date, update);
+        await this.calendarDatabase.updateByTwoField('userId', req.info.userId, 'date', date, update);
       }  
     }
     return respond(res, activityResponses.created, {activityId});
@@ -50,9 +49,9 @@ class Activity {
   async addProgress (req, res) {
     // try {
     const activity = await this.activityDatabase.getById(req.info.activityId);
-    if (activity.userId.valueOf() !== req.info.userId) {
-      return respond(res, activityResponses.forbidden);
-    }
+    if (!activity) return respond(res, activityResponses.notFound);
+    if (activity.userId.valueOf() !== req.info.userId) return respond(res, activityResponses.forbidden);
+    if (!calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate).includes(req.info.date)) return respond(res, activityResponses.badRequest);
     let progressTillNow = activity.progress[req.info.date];
     if (!progressTillNow) progressTillNow = 0;
     if (progressTillNow + req.info.amount > activity.targetAmount) {

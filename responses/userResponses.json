@@ -27,6 +27,10 @@
     "code": 401,
     "message": "Unauthorized access"
   },
+  "forbidden": {
+    "code": 403,
+    "message": "Access forbidden"
+  },
   "notFound": {
     "code": 404,
     "message": "User not found"

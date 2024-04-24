@@ -11,6 +11,10 @@
     "code": 400,
     "message": "Entered progress is more than target"
   },
+  "badRequest": {
+    "code": 400,
+    "message": "Date is not in activities days"
+  },
   "forbidden": {
     "code": 403,
     "message": "Do not have access to this activity"
