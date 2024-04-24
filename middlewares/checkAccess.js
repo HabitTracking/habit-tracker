@@ -7,25 +7,35 @@ dotenv.config({ path: './.env' });
 
 module.exports = function checkAccess (hasAccessWithToken) {
   return async (req, res, next)=>{
-    let token = req.headers.cookie;
-    if ((hasAccessWithToken && token) || (!hasAccessWithToken && !token)) {
-      if (token) {
-        token = token.split('=')[1];
+    //AmyT=salam; habticToken=eyJhbGci
+    let {cookie} = req.headers;
+    let cookies = cookie?.split(';');
+    cookies = cookies?.filter(item=>{
+      return item.includes(process.env.TOKEN_NAME);
+    });
+    cookies = cookies ? cookies[0] : null;
+    const tokenKey = cookies?.split('=')[0];
+    const tokenValue = cookies?.split('=')[1];
+    // String().
+    // const isToken
+    if ((hasAccessWithToken && tokenKey) || (!hasAccessWithToken && !tokenKey)) {
+      if (tokenKey) {
+        // const token = cookie.split('=')[1];
         try {
-          const user = jwt.verify(token, process.env.jwt_secretKey);
-          req.info = req.info ? req.info : {};
+          const user = jwt.verify(tokenValue, process.env.jwt_secretKey);
+          req.info ??= {};
           req.info.userId = user.userId;
           next();
         } catch (err) {
-          return respond(res, responses.unauthorized, {credentials: req.info});
+          return respond(res, responses.forbidden, {credentials: req.info});
         }
       }
       else {
         next();
       }
     }
-    if ((!hasAccessWithToken && token) || (hasAccessWithToken && !token)) {
-      return respond(res, responses.unauthorized, {credentials: req.info});
+    if ((!hasAccessWithToken && cookie) || (hasAccessWithToken && !cookie)) {
+      return respond(res, responses.forbidden, {credentials: req.info});
     }
   };
 };
