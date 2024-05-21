@@ -37,7 +37,7 @@ class Database {
   
   async create (data) {
     const model = new this.Model(data);
-    return await model.save();
+    return model.save();
   }
   async updateById (_id, updateObj) {
     return await this.Model.updateOne({_id}, updateObj);
