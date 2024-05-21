@@ -8,10 +8,12 @@ const signUpSchema = Joi.object({
 });
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
+  // dd
   password: Joi.string().min(8).required(),
 });
 
 module.exports = {
   signUpSchema,
+  // dd
   loginSchema,
 };
