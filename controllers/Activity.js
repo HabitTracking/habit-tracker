@@ -58,7 +58,21 @@ class Activity {
 
   }
 
- 
+  async getAll (req, res) {
+    let activities = await this.activityDatabase.getByField('userId', req.info.userId);
+    if (!activities.length) return respond(res, activityResponses.notFound);
+    return respond(res, activityResponses.successful, activities);
+  }
+  
+  async remove (req, res) {
+    const activity = await this.activityDatabase.findByIdAndDelete(req.info.activityId);
+    if (!activity) return respond(res, activityResponses.notFound);
+    const activityId = activity._id.valueOf();
+    const dates = calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate);
+    await this.deleteActivityFromCalendarDB(activityId, req.info.userId, dates);
+    
+    return respond(res, activityResponses.successful);
+  }
 
   async addProgress (req, res) {
     // try {
@@ -82,13 +96,6 @@ class Activity {
     //   respond(res, activityResponses.serverError);
     // }
   }
-
-  async getAll (req, res) {
-    let activities = await this.activityDatabase.getByField('userId', req.info.userId);
-    if (!activities.length) return respond(res, activityResponses.notFound);
-    return respond(res, activityResponses.successful, activities);
-  }
-
 
   async deleteActivityFromCalendarDB (activityId, userId, dates) {
     for (const date of dates) {

@@ -24,6 +24,11 @@ router.get(
   [checkAccess(true)],
   activityController.getAll.bind(activityController),
 );
+router.delete(
+  '/',
+  [checkAccess(true), validateData(activitySchema.remove, ['query'])],
+  activityController.remove.bind(activityController),
+);
 router.post(
   '/addProgress',
   [checkAccess(true), validateData(activitySchema.progress, ['body'])],

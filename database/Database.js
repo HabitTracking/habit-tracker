@@ -77,6 +77,9 @@ class Database {
     await this.Model.deleteOne(condition);
     // return data.map(value => value._doc);
   }
+  async findByIdAndDelete (id) {
+    return await this.Model.findByIdAndDelete(id);
+  }
 }
 
 module.exports = Database;

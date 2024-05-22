@@ -23,6 +23,9 @@ const update = Joi.object({
   targetUnit: Joi.string(), //کیلومتر
   targetAmount: Joi.number().min(0), // 10
 });
+const remove = Joi.object({
+  activityId:Joi.string().required(), //in params
+});
 const progress = Joi.object({
   activityId: Joi.string().required(),
   date: Joi.string().required(),
@@ -32,5 +35,6 @@ const progress = Joi.object({
 module.exports = {
   add,
   update,
+  remove,
   progress,
 };  
