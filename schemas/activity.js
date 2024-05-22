@@ -11,6 +11,18 @@ const add = Joi.object({
   targetUnit: Joi.string().required(), //کیلومتر
   targetAmount: Joi.number().min(0).required(), // 10
 });
+const update = Joi.object({
+  activityId:Joi.string().required(), //in params, others in body
+  name: Joi.string().min(2).max(255),
+  note: Joi.string().max(1024),
+  color: Joi.string().length(6).default('ffffff'),
+  activityType: Joi.string(), //id
+  startTime: Joi.string(), //timestamp
+  frequency: Joi.number().min(0), //0 1 3 7 30
+  dueDate: Joi.string(), //timestamp
+  targetUnit: Joi.string(), //کیلومتر
+  targetAmount: Joi.number().min(0), // 10
+});
 const progress = Joi.object({
   activityId: Joi.string().required(),
   date: Joi.string().required(),
@@ -19,5 +31,6 @@ const progress = Joi.object({
 
 module.exports = {
   add,
+  update,
   progress,
 };  

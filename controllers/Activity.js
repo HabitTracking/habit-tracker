@@ -26,25 +26,39 @@ class Activity {
     const activityId = result.toObject()._id.valueOf();
       
     const dates = calculateActivityDays(req.info.startTime, req.info.frequency, req.info.dueDate);
-    for (const date of dates) {
-      let thisDay = await this.calendarDatabase.getByTwoField('userId', req.info.userId, 'date', date);
-      if (!thisDay.length) {
-        thisDay = {userId: req.info.userId, date: date, activities: [activityId]};
-        await this.calendarDatabase.create(thisDay);
-      } else {
-        let activities = thisDay[0].activities;
-        activities = JSON.parse(JSON.stringify(activities));
-        activities.push(activityId);
-        const update = { activities};
-        await this.calendarDatabase.updateByTwoField('userId', req.info.userId, 'date', date, update);
-      }  
-    }
+    await this.insertActivityIntoCalendarDB(activityId, req.info.userId, dates);
     return respond(res, activityResponses.created, {activityId});
     // } catch (err) {
     //   logger.error('error in activity add handler', err);
     //   respond(res, activityResponses.serverError);
     // } 
   }
+  
+  async update (req, res) {
+    const userId = req.info.userId;
+    const activityId = req.info.activityId;
+    delete req.info.userId; //because updateById is updating whole req.info but userId should not be as string 
+    
+    const activityType = await this.activityTypeDatabase.getById(req.info.activityType);
+    if (!activityType) return respond(res, activityTypeResponses.notFound);
+    if (activityType.userId && activityType.userId != userId) return respond(res, activityTypeResponses.forbidden);
+    
+    const activity = await this.activityDatabase.getById(activityId);
+    if (!activity) return respond(res, activityResponses.notFound);
+
+    await this.activityDatabase.updateById(activityId, req.info);
+
+    const prevDates = calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate);
+    await this.deleteActivityFromCalendarDB(activityId, userId, prevDates);
+
+    const newDates = calculateActivityDays(req.info.startTime, req.info.frequency, req.info.dueDate);
+    await this.insertActivityIntoCalendarDB(activityId, userId, newDates);
+    
+    return respond(res, activityResponses.successful, {activityId});
+
+  }
+
+ 
 
   async addProgress (req, res) {
     // try {
@@ -73,6 +87,40 @@ class Activity {
     let activities = await this.activityDatabase.getByField('userId', req.info.userId);
     if (!activities.length) return respond(res, activityResponses.notFound);
     return respond(res, activityResponses.successful, activities);
+  }
+
+
+  async deleteActivityFromCalendarDB (activityId, userId, dates) {
+    for (const date of dates) {
+      let thisDay = await this.calendarDatabase.getByTwoField('userId', userId, 'date', date);
+      let activities = thisDay[0].activities;
+      activities = JSON.parse(JSON.stringify(activities));
+      const index = activities.indexOf(activityId);
+      activities.splice(index,1);
+      if (activities.length) {
+        const update = { activities };
+        await this.calendarDatabase.updateByTwoField('userId', userId, 'date', date, update);
+      } else {
+        const condition = { userId, date};
+        await this.calendarDatabase.deleteOne(condition);
+      }
+    }
+  }
+
+  async insertActivityIntoCalendarDB (activityId, userId, dates) {
+    for (const date of dates) {
+      let thisDay = await this.calendarDatabase.getByTwoField('userId', userId, 'date', date);
+      if (!thisDay.length) {
+        thisDay = {userId, date: date, activities: [activityId]};
+        await this.calendarDatabase.create(thisDay);
+      } else {
+        let activities = thisDay[0].activities;
+        activities = JSON.parse(JSON.stringify(activities));
+        activities.push(activityId);
+        const update = { activities};
+        await this.calendarDatabase.updateByTwoField('userId', userId, 'date', date, update);
+      }  
+    }
   }
 
 }

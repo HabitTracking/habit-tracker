@@ -73,6 +73,10 @@ class Database {
     const data = await this.Model.find(condition);
     return data.map(value => value._doc);
   }
+  async deleteOne (condition) {
+    await this.Model.deleteOne(condition);
+    // return data.map(value => value._doc);
+  }
 }
 
 module.exports = Database;
