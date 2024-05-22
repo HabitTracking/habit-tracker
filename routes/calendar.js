@@ -10,12 +10,12 @@ const router = express.Router();
 
 router.get(
   '/month',
-  [checkAccess(true), validateData(calendarSchema.get, 'query')], 
+  [checkAccess(true), validateData(calendarSchema.get, ['query'])], 
   calendarCotroller.getMonthActivities.bind(calendarCotroller),
 );
 router.get(
   '/day',
-  [checkAccess(true), validateData(calendarSchema.get, 'query')], 
+  [checkAccess(true), validateData(calendarSchema.get, ['query'])], 
   calendarCotroller.getDayActivities.bind(calendarCotroller),
 );
 

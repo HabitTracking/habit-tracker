@@ -1,9 +1,13 @@
 const respond = require('../hleper/responder');
 const userResponses = require('../responses/userResponses.json');
 
-module.exports = function validate (schema, fieldToValidate = 'body') {
+module.exports = function validate (schema, fieldToValidate) {
   return (req, res, next) =>{
-    const info = req[fieldToValidate];
+    let info = {};
+    fieldToValidate.forEach(element => {
+      info = {...info, ...req[element]};
+    });
+
     const result = schema.validate(info, {abortEarly: false});
     if (result.error) {
       const errors = result.error.details.map(value => value.message);

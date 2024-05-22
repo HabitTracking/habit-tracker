@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post(
   '/',
-  [checkAccess(true), validateData(activityTypeSchema.add), checkForRepetitive(ActivityTypeModel, ['title', 'userId'], AcTyResponses)],
+  [checkAccess(true), validateData(activityTypeSchema.add, ['body']), checkForRepetitive(ActivityTypeModel, ['title', 'userId'], AcTyResponses)],
   activityTypeCotroller.add.bind(activityTypeCotroller),
 );
 router.get(

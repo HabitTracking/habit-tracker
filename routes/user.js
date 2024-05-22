@@ -14,12 +14,12 @@ const router = express.Router();
 
 router.post(
   '/signup',
-  [checkAccess(false), validateData(userSchema.signUpSchema), checkForRepetitive(UserModel, ['email'], userResponses), hashProperty('password')],
+  [checkAccess(false), validateData(userSchema.signUpSchema, ['body']), checkForRepetitive(UserModel, ['email'], userResponses), hashProperty('password')],
   userController.signUp.bind(userController),
 );
 router.post(
   '/login',
-  [checkAccess(false), validateData(userSchema.loginSchema)],
+  [checkAccess(false), validateData(userSchema.loginSchema, ['body'])],
   userController.login.bind(userController),
 );
 router.post(

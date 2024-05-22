@@ -11,8 +11,13 @@ const router = express.Router();
 
 router.post(
   '/',
-  [checkAccess(true), validateData(activitySchema.add)],
+  [checkAccess(true), validateData(activitySchema.add, ['body'])],
   activityController.add.bind(activityController),
+);
+router.put(
+  '/',
+  [checkAccess(true), validateData(activitySchema.update, ['body', 'query'])],
+  activityController.update.bind(activityController),
 );
 router.get(
   '/',
@@ -21,7 +26,7 @@ router.get(
 );
 router.post(
   '/addProgress',
-  [checkAccess(true), validateData(activitySchema.progress)],
+  [checkAccess(true), validateData(activitySchema.progress, ['body'])],
   activityController.addProgress.bind(activityController),
 );
 
