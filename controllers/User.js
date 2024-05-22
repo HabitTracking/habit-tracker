@@ -31,14 +31,14 @@ class UserController {
     if (!userData) return respond(res, userResponses.unauthorized, {credentials});
     const isPasswordValid = await bcrypt.compare(credentials.password, userData.password);
     if (!isPasswordValid) return respond(res, userResponses.unauthorized, {credentials});
-    const token = jwt.sign({ userId: userData._id, email: userData.email }, process.env.jwt_secretKey, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: userData._id, email: userData.email }, process.env.jwt_secretKey);
     // const expireTime = new Date(new Date().getTime() + 60 * 60 * 1000).toUTCString();
     // res.setHeader(
     //   'Set-Cookie',
     //   `token=${token}; HttpOnly; path=/; Expires= ${expireTime}`,
     // );
     // res.header('Authorization', `Bearer ${token}`);
-    res.cookie(process.env.TOKEN_NAME, token, { maxAge: 60 * 60 * 1000 });
+    res.cookie(process.env.TOKEN_NAME, token, { maxAge: 100 * 60 * 60 * 1000 });
     return respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
   }
 
