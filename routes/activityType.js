@@ -17,6 +17,11 @@ router.post(
   [checkAccess(true), validateData(activityTypeSchema.add, ['body']), checkForRepetitive(ActivityTypeModel, ['title', 'userId'], AcTyResponses)],
   activityTypeCotroller.add.bind(activityTypeCotroller),
 );
+router.put(
+  '/',
+  [checkAccess(true), validateData(activityTypeSchema.update, ['body', 'query']), checkForRepetitive(ActivityTypeModel, ['title', 'userId'], AcTyResponses)],
+  activityTypeCotroller.update.bind(activityTypeCotroller),
+);
 router.get(
   '/',
   [checkAccess(true)],

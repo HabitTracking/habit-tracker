@@ -19,6 +19,16 @@ class ActivityType {
     // } 
   }
 
+  async update (req, res) {
+    const {id, title} = req.info;
+    let defaultActivityTypes = await this.database.getByField('userId', null);
+    for (let i = 0; i < defaultActivityTypes.length; i++) {
+      if (defaultActivityTypes[i].title === title) return respond(res, AcTyResponses.alreadyExist, title);      
+    }
+    await this.database.updateById(id, {title});
+    return respond(res, AcTyResponses.successful, {title});
+  }
+
   async showAll (req, res) {
     const userId = req.info.userId;
     // try {
