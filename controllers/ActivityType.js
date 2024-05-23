@@ -10,6 +10,11 @@ class ActivityType {
 
   async add (req, res) {
     // try {
+    const {title} = req.info;
+    let defaultActivityTypes = await this.database.getByField('userId', null);
+    for (let i = 0; i < defaultActivityTypes.length; i++) {
+      if (defaultActivityTypes[i].title === title) return respond(res, AcTyResponses.alreadyExist, title);      
+    }  
     const result = await this.database.create(req.info);
     const activityTypeId = result.toObject()._id.valueOf();
     return respond(res, AcTyResponses.created, {activityTypeId});
@@ -20,13 +25,24 @@ class ActivityType {
   }
 
   async update (req, res) {
-    const {id, title} = req.info;
+    const {activityTypeId, title} = req.info;
     let defaultActivityTypes = await this.database.getByField('userId', null);
     for (let i = 0; i < defaultActivityTypes.length; i++) {
       if (defaultActivityTypes[i].title === title) return respond(res, AcTyResponses.alreadyExist, title);      
     }
-    await this.database.updateById(id, {title});
+    await this.database.updateById(activityTypeId, {title});
     return respond(res, AcTyResponses.successful, {title});
+  }
+
+  async remove (req, res) {
+    const {activityTypeId} = req.info;
+    let defaultActivityTypes = await this.database.getByField('userId', null);
+    for (let i = 0; i < defaultActivityTypes.length; i++) {
+      if (defaultActivityTypes[i]._id.valueOf() === activityTypeId) return respond(res, AcTyResponses.forbidden, {activityTypeId});      
+    }
+    const activity = await this.database.findByIdAndDelete(activityTypeId);
+    if (!activity) return respond(res, AcTyResponses.notFound, {activityTypeId});
+    return respond(res, AcTyResponses.successful, {title: activity.title});
   }
 
   async showAll (req, res) {

@@ -22,6 +22,11 @@ router.put(
   [checkAccess(true), validateData(activityTypeSchema.update, ['body', 'query']), checkForRepetitive(ActivityTypeModel, ['title', 'userId'], AcTyResponses)],
   activityTypeCotroller.update.bind(activityTypeCotroller),
 );
+router.delete(
+  '/',
+  [checkAccess(true), validateData(activityTypeSchema.remove, ['query'])],
+  activityTypeCotroller.remove.bind(activityTypeCotroller),
+);
 router.get(
   '/',
   [checkAccess(true)],
