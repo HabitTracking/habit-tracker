@@ -16,6 +16,7 @@ class UserController {
 
   async signUp (req, res) {
     // try {
+    req.info.theme = process.env.DEFAULT_THEME;
     const result = await this.database.create(req.info);
     const userId = result.toObject()._id.valueOf();
     return respond(res, userResponses.created, {userId});
@@ -39,7 +40,8 @@ class UserController {
     // );
     // res.header('Authorization', `Bearer ${token}`);
     res.cookie(process.env.TOKEN_NAME, token, { maxAge: 100 * 60 * 60 * 1000 });
-    return respond(res, userResponses.loginSuccess, {firstname: userData.firstname, lastname: userData.lastname, email: userData.email}); 
+    const {firstname, lastname, email, theme} = userData;
+    return respond(res, userResponses.loginSuccess, {firstname, lastname, email, theme}); 
   }
 
   async logout (req, res) {
@@ -49,6 +51,17 @@ class UserController {
     // );
     res.clearCookie(process.env.TOKEN_NAME);
     return respond(res, userResponses.logoutSuccess);
+  }
+
+  async setTheme (req, res) {
+    const update = {theme: req.info.theme};
+    await this.database.updateById(req.info.userId, update);
+    return respond(res, userResponses.successful);
+  }
+
+  async getTheme (req, res) {
+    const user = await this.database.getById(req.info.userId);
+    return respond(res, userResponses.successful, {theme: user.theme});
   }
 }
 

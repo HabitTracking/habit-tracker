@@ -27,5 +27,15 @@ router.post(
   [checkAccess(true)],
   userController.logout.bind(userController),
 );
+router.post(
+  '/setTheme',
+  [checkAccess(true), validateData(userSchema.themeSchema, ['body'])],
+  userController.setTheme.bind(userController),
+);
+router.get(
+  '/getTheme',
+  [checkAccess(true)],
+  userController.getTheme.bind(userController),
+);
 
 module.exports = router;

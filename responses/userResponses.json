@@ -1,4 +1,8 @@
 {
+  "successful": {
+    "code": 200,
+    "message": "successful"
+  },
   "loginSuccess": {
     "code": 200,
     "message": "Login successful"

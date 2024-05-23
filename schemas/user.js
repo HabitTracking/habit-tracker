@@ -11,9 +11,13 @@ const loginSchema = Joi.object({
   // dd
   password: Joi.string().min(8).required(),
 });
+const themeSchema = Joi.object({
+  theme: Joi.string().required(),
+});
 
 module.exports = {
   signUpSchema,
   // dd
   loginSchema,
+  themeSchema
 };
