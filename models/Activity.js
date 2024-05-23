@@ -11,7 +11,7 @@ const ActivitySchema = new mongoose.Schema({
   dueDate: {type: String, required: true},
   targetUnit: {type: String, required: true},
   targetAmount: {type: Number, required: true},
-  progress: {type: Object, required: true},
+  progress: {type: Object},
 }); 
 const ActivityTypeModel = mongoose.model('Activity', ActivitySchema);
 

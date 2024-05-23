@@ -31,7 +31,7 @@ router.delete(
 );
 router.post(
   '/addProgress',
-  [checkAccess(true), validateData(activitySchema.progress, ['body'])],
+  [checkAccess(true), validateData(activitySchema.progress, ['body', 'query'])],
   activityController.addProgress.bind(activityController),
 );
 

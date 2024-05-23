@@ -20,7 +20,7 @@ class Activity {
     if (!activityType) return respond(res, activityTypeResponses.notFound);
     if (activityType.userId && activityType.userId != req.info.userId) return respond(res, activityTypeResponses.forbidden);
 
-    req.info.progress = {[req.info.startTime]: 0};
+    // req.info.progress = {[req.info.startTime]: 0};
     // try {
     const result = await this.activityDatabase.create(req.info);
     const activityId = result.toObject()._id.valueOf();
@@ -35,11 +35,10 @@ class Activity {
   }
   
   async update (req, res) {
-    const userId = req.info.userId;
-    const activityId = req.info.activityId;
+    const {activityId, userId, activityType: activityTypeId, startTime, frequency, dueDate } = req.info;
     delete req.info.userId; //because updateById is updating whole req.info but userId should not be as string 
     
-    const activityType = await this.activityTypeDatabase.getById(req.info.activityType);
+    const activityType = await this.activityTypeDatabase.getById(activityTypeId);
     if (!activityType) return respond(res, activityTypeResponses.notFound);
     if (activityType.userId && activityType.userId != userId) return respond(res, activityTypeResponses.forbidden);
     
@@ -51,7 +50,7 @@ class Activity {
     const prevDates = calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate);
     await this.deleteActivityFromCalendarDB(activityId, userId, prevDates);
 
-    const newDates = calculateActivityDays(req.info.startTime, req.info.frequency, req.info.dueDate);
+    const newDates = calculateActivityDays(startTime, frequency, dueDate);
     await this.insertActivityIntoCalendarDB(activityId, userId, newDates);
     
     return respond(res, activityResponses.successful, {activityId});
@@ -65,30 +64,36 @@ class Activity {
   }
   
   async remove (req, res) {
-    const activity = await this.activityDatabase.findByIdAndDelete(req.info.activityId);
-    if (!activity) return respond(res, activityResponses.notFound);
-    const activityId = activity._id.valueOf();
+    const {activityId, userId} = req.info;
+    const activity = await this.activityDatabase.findByIdAndDelete(activityId);
+    if (!activity) return respond(res, activityResponses.notFound, {activityId});
+    // const activityId = activity._id.valueOf();
     const dates = calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate);
-    await this.deleteActivityFromCalendarDB(activityId, req.info.userId, dates);
+    await this.deleteActivityFromCalendarDB(activityId, userId, dates);
     
     return respond(res, activityResponses.successful);
   }
 
   async addProgress (req, res) {
     // try {
-    const activity = await this.activityDatabase.getById(req.info.activityId);
+    const {activityId, userId, date, amount} = req.info;
+    const activity = await this.activityDatabase.getById(activityId);
     if (!activity) return respond(res, activityResponses.notFound);
-    if (activity.userId.valueOf() !== req.info.userId) return respond(res, activityResponses.forbidden);
-    if (!calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate).includes(req.info.date)) return respond(res, activityResponses.badRequest);
-    let progressTillNow = activity.progress[req.info.date];
+    if (activity.userId.valueOf() !== userId) return respond(res, activityResponses.forbidden);
+    const activityDates = calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate);
+    if (!(activityDates.includes(Number(date)))) return respond(res, activityResponses.badRequest);
+    if (!activity.progress) {
+      activity.progress = {};
+      activity.progress[date] = 0;
+    }
+    let progressTillNow = activity.progress[date];
     if (!progressTillNow) progressTillNow = 0;
-    if (progressTillNow + req.info.amount > activity.targetAmount) {
+    if (progressTillNow + amount > activity.targetAmount) {
       return respond(res, activityResponses.targetExceeded);
     }
-    const progress = activity.progress;
-    progress[req.info.date] = progressTillNow + req.info.amount;
-    const update = { progress };
-    await this.activityDatabase.updateById(req.info.activityId, update);
+    activity.progress[date] = progressTillNow + amount;
+    const update = { progress: activity.progress };
+    await this.activityDatabase.updateById(activityId, update);
     return respond(res, activityResponses.successful);
 
     // } catch (err) {

@@ -12,7 +12,7 @@ const add = Joi.object({
   targetAmount: Joi.number().min(0).required(), // 10
 });
 const update = Joi.object({
-  activityId:Joi.string().required(), //in params, others in body
+  activityId: Joi.string().required(), //in params, others in body
   name: Joi.string().min(2).max(255),
   note: Joi.string().max(1024),
   color: Joi.string().length(6).default('ffffff'),
@@ -24,10 +24,10 @@ const update = Joi.object({
   targetAmount: Joi.number().min(0), // 10
 });
 const remove = Joi.object({
-  activityId:Joi.string().required(), //in params
+  activityId: Joi.string().required(), //in params
 });
 const progress = Joi.object({
-  activityId: Joi.string().required(),
+  activityId: Joi.string().required(), //in params, others in body
   date: Joi.string().required(),
   amount: Joi.number().min(0).required(),
 });
