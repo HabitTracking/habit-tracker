@@ -14,10 +14,14 @@ const loginSchema = Joi.object({
 const themeSchema = Joi.object({
   theme: Joi.string().required(),
 });
+const forgotPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
 
 module.exports = {
   signUpSchema,
   // dd
   loginSchema,
-  themeSchema
+  themeSchema,
+  forgotPasswordSchema,
 };

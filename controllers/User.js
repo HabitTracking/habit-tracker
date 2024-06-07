@@ -4,6 +4,7 @@ const Database = require('../database/Database');
 const respond = require('../hleper/responder');
 const userResponses = require('../responses/userResponses.json');
 const UserModel = require('../models/User');
+const nodemailer = require('nodemailer');
 
 const dotenv = require('dotenv');
 const logger = require('../startup/logger');
@@ -63,6 +64,43 @@ class UserController {
     const user = await this.database.getById(req.info.userId);
     return respond(res, userResponses.successful, {theme: user.theme});
   }
+
+  async forgotPassword (req, res) {
+    const email = req.info.email;
+    const users = await this.database.getByField('email', email);
+    if (!users.length) return respond(res, userResponses.notFound);
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    const otpExpire = new Date();
+    otpExpire.setMinutes(otpExpire.getMinutes() + 2);
+
+    
+    // try {
+    const update = {otp, otpExpire};
+    // try {
+    await this.database.updateById(users[0]._id.valueOf(), update);
+    //   console.log('yes');
+
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    const transporter = nodemailer.createTransport({
+      service: process.env.EMAIL_SERVICE,
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'Habtic Reset Password',
+      text: `otp code reset password: ${otp} .\nexpires in 2 minutes.`,
+    });
+    return respond(res, userResponses.successful);
+
+  }
+
 }
 
 module.exports = UserController;

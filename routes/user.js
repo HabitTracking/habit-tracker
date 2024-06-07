@@ -37,5 +37,10 @@ router.get(
   [checkAccess(true)],
   userController.getTheme.bind(userController),
 );
+router.post(
+  '/forgotpassword',
+  [checkAccess(false), validateData(userSchema.forgotPasswordSchema, ['body'])],
+  userController.forgotPassword.bind(userController),
+);
 
 module.exports = router;

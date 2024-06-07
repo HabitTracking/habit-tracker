@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema({
   lastname: {type: String, required: true},
   password: {type: String, required: true},
   theme: {type: String, required: true},
+  otp: {type: String, required: false},
+  otpExpire: {type: String, required: false},
 }); 
 const userModel = mongoose.model('User', userSchema);
 
