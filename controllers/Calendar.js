@@ -44,14 +44,21 @@ class ActivityType {
 
     for (const activityId of activitiesID) {
       let activity = await this.activityDatabase.getById(activityId);
-      let progress;
-      for (const [date] of Object.entries(activity.progress)) {
-        if (date>=todayDate && date<tomorrowDate) {
-          progress = activity.progress[date];
-          break;
+      let progress = 0;
+      if (activity.progress) {
+        for (const [activityTime, actuvityProgress] of activity.progress) {
+          if (activityTime>=todayDate && activityTime<tomorrowDate) {
+            progress = actuvityProgress;
+            break;
+          }
         }
       }
-      if (!progress) progress = 0;
+      // for (const [activityTime] of Object.entries(activity.progress)) {
+      //   if (activityTime>=todayDate && activityTime<tomorrowDate) {
+      //     progress = activity.progress[activityTime];
+      //     break;
+      //   }
+      // }
       const progressPercentage = Math.ceil(progress*100/activity.targetAmount);
       activity.progress = progressPercentage;
       todayActivities.push(activity);
