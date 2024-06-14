@@ -13,7 +13,7 @@
   },
   "badRequest": {
     "code": 400,
-    "message": "Date is not in activities days"
+    "message": "Time is not in activities days"
   },
   "forbidden": {
     "code": 403,

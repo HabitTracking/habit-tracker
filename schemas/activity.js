@@ -28,7 +28,7 @@ const remove = Joi.object({
 });
 const progress = Joi.object({
   activityId: Joi.string().required(), //in params, others in body
-  date: Joi.string().required(),
+  time: Joi.string().required(),
   amount: Joi.number().min(0).required(),
 });
 

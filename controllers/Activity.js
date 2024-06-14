@@ -3,6 +3,7 @@ const ActivityModel = require('../models/Activity');
 const ActivityTypeModel = require('../models/ActivityType');
 const CalendarModel = require('../models/Calendar');
 const calculateActivityDays = require('../hleper/calculateActivityDays');
+const calculateActivityTimes = require('../hleper/calculateActivityTimes');
 const respond = require('../hleper/responder');
 const activityResponses = require('../responses/activity.json');
 const activityTypeResponses = require('../responses/activityType.json');
@@ -76,22 +77,22 @@ class Activity {
 
   async addProgress (req, res) {
     // try {
-    const {activityId, userId, date, amount} = req.info;
+    const {activityId, userId, time, amount} = req.info;
     const activity = await this.activityDatabase.getById(activityId);
     if (!activity) return respond(res, activityResponses.notFound);
     if (activity.userId.valueOf() !== userId) return respond(res, activityResponses.forbidden);
-    const activityDates = calculateActivityDays(activity.startTime, activity.frequency, activity.dueDate);
-    if (!(activityDates.includes(Number(date)))) return respond(res, activityResponses.badRequest);
+    const activityTimes = calculateActivityTimes(activity.startTime, activity.frequency, activity.dueDate);
+    if (!(activityTimes.includes(Number(time)))) return respond(res, activityResponses.badRequest);
     if (!activity.progress) {
       activity.progress = {};
-      activity.progress[date] = 0;
+      activity.progress[time] = 0;
     }
-    let progressTillNow = activity.progress[date];
+    let progressTillNow = activity.progress[time];
     if (!progressTillNow) progressTillNow = 0;
     if (progressTillNow + amount > activity.targetAmount) {
       return respond(res, activityResponses.targetExceeded);
     }
-    activity.progress[date] = progressTillNow + amount;
+    activity.progress[time] = progressTillNow + amount;
     const update = { progress: activity.progress };
     await this.activityDatabase.updateById(activityId, update);
     return respond(res, activityResponses.successful);
