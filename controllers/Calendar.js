@@ -46,7 +46,7 @@ class ActivityType {
       let activity = await this.activityDatabase.getById(activityId);
       let progress = 0;
       if (activity.progress) {
-        for (const [activityTime, actuvityProgress] of activity.progress) {
+        for (const [activityTime, actuvityProgress] of Object.entries(activity.progress)) {
           if (activityTime>=todayDate && activityTime<tomorrowDate) {
             progress = actuvityProgress;
             break;
