@@ -14,13 +14,13 @@ Habtic is a habit tracker web application designed to help users build and maint
 Run Frontend and Backend code:
 ### Frontend
 - clone the repositoy from [here](https://github.com/HabitTracking/Frontend).
-- install dependencies: `npm install`
-- run project: `npm run dev`
+- install dependencies: `npm install`.
+- run project: `npm run dev`.
 
 ### Backend
-- clone the repositoy or download the ZIP
-- install dependencies: `npm install`
-- run project: `npm run start`
+- clone the repositoy or download the ZIP.
+- install dependencies: `npm install`.
+- run project: `npm run start`.
 
   
 
