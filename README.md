@@ -24,5 +24,9 @@ Run Frontend and Backend code:
 - run project: `npm run start`.
 
   
+## Images
+<img src="https://github.com/amin-mlm/habit-tracker/blob/main/images/activity.jpg?raw=true" alt="alt text" width="400" height="220"> <img src="https://github.com/amin-mlm/habit-tracker/blob/main/images/calendar.jpg?raw=true" alt="alt text" width="400" height="220">
+<img src="https://github.com/amin-mlm/habit-tracker/blob/main/images/addActivity.png?raw=true" alt="alt text" width="400" height="220">
+<img src="https://github.com/amin-mlm/habit-tracker/blob/main/images/home.png?raw=true" alt="alt text" width="400" height="220">
 
 
