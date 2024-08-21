@@ -4,7 +4,8 @@ Habtic is a habit tracker web application designed to help users build and maint
 ## Features
 - User authentication (registration and login)
 - Create, edit, and delete habits and tasks
-- Track daily habit completion
+- Add progress to habit routine
+- Track you habits completion status
 - Categorizing habits.
 - Calendar view providing a visual overview of upcoming habits
 - Daily and monthly report of habits
